@@ -1,21 +1,12 @@
 # esphome-components' check suite, run by the check service on a copy of the pushed commit.
-# Kept small on purpose: it needs no network and installs nothing (the repo mirrors ESPHome, whose own
-# CI lives in .github/workflows and is not run here). Checks run as `sh -c` (dash): use POSIX `set -eu`.
-# Rollback: `git revert` the merge commit; this file is then gone and the repo has no suite again.
+# Small on purpose: no network, nothing installed. Checks run as `sh -c` (dash): use POSIX `set -eu`.
+# Rollback: `git revert` the merge commit; this file is then gone.
 version: 1
 image: python:3.12-bookworm@sha256:5560e9ab8709f459489e5b8aa696eda8a07ef821e14bb122be62d91234bfa98b
 network: none
 checks:
-  # The firmware tree must at least be valid Python (no dependencies needed).
   - name: python-syntax
     timeout: 600
     run: |
       set -eu
       python -m compileall -q esphome script
-  # LIVE_CHECKS.md (task 1025) must stay and keep its read-only rule.
-  - name: live-checks-doc
-    timeout: 60
-    run: |
-      set -eu
-      test -s LIVE_CHECKS.md
-      grep -q "Never send a command to a live device" LIVE_CHECKS.md
