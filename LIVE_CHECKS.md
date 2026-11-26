@@ -36,3 +36,19 @@ when the live-read quotes are missing); this file merges after it. This file is 
    containing `adhan` or `iqamah`; the ids are not fixed in this repo, so quote the ids you read). Hold
    the change if any adhan or iqamah reminder falls within the window the restart covers.
 8. If a read does not match, the change is not complete: rework it or revert.
+
+## Completion record (required before "complete")
+
+Miss 118 (task 101, live check 10): a change was called complete after the merge without its live reads.
+So the seat's final report and the PR body must carry this block; without it the change is not complete:
+
+```
+Live items: <each live item from the acceptance criteria, or "none">
+Read 1: <connector path> at <read time> -> <quoted output> (matches: yes/no)
+Post-deploy check: <entity and value that must be seen> -> <read time and quoted output, or "pending">
+Synced and healthy (GitOps) / previous build ready to reflash (firmware): <quote or name>
+Undos: <per step 6>
+```
+
+- "Pending" is allowed in the PR; it is not allowed in the word "complete". Read it after the deploy, quote it, then say complete.
+- If a live item has no read-only read, say so and ask for one; do not skip it.
