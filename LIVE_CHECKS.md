@@ -2,9 +2,8 @@
 
 Applies to every change of squad homeassistant: firmware here (`esphome/**`, `platformio.ini`,
 `sdkconfig.defaults*`) and the `home` repo (Argo deploys a merge live). A change is complete when its
-live items have been read and match, not when it merges. The loadout that loads this procedure at the
-seat's start is requested from the fleet squad (subtask `live-proof-loadout`); until it lands, this file
-is the written rule.
+live items have been read and match, not when it merges. This file is the written rule. Loading it at the
+seat's start and refusing "complete" without it belong to the fleet model (the fleet squad).
 
 1. List every live item in the task's acceptance criteria.
 2. For each, name the exact read-only read (HA state, history, logbook or backup info through the
