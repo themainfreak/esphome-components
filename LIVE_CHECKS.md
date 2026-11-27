@@ -36,6 +36,9 @@ when the live-read quotes are missing); this file merges after it. This file is 
    containing `adhan` or `iqamah`; the ids are not fixed in this repo, so quote the ids you read). Hold
    the change if any adhan or iqamah reminder falls within the window the restart covers.
 8. If a read does not match, the change is not complete: rework it or revert.
+9. A read that returns nothing, "?", `unknown` or `unavailable` is a failed read, not a pass. Miss 161
+   (task 37): a change was called complete while its live check read "?". Name the read before the
+   review (step 2), and do not call the change complete until it returns the expected value.
 
 ## Completion record (required before "complete")
 
