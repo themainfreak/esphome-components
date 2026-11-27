@@ -58,6 +58,7 @@ Read 1: <connector path> at <read time> -> <quoted output> (matches: yes/no)
 Post-deploy check: <entity and value that must be seen> -> <read time and quoted output, or "pending">
 Synced and healthy (GitOps) / previous build ready to reflash (firmware): <quote or name>
 Undos: <per step 6>
+Status: <ready for merge, not complete | complete>
 ```
 
 - Status line: "ready for merge, not complete" until every post-deploy check is read and matches; only then "complete".
@@ -65,5 +66,7 @@ Undos: <per step 6>
 - If a live item has no read-only read, say so and ask for one; do not skip it.
 
 Check a report before saying "complete": `python3 script/check_completion_record.py <file with the PR body or report>`.
-It exits 1 when a record line is missing, or when "complete" is said while a read failed, did not match, or the
-post-deploy check is pending.
+It exits 1 when a record line (including `Status:`) is missing, or when the status is anything but
+"not complete" while a read failed, did not match, or the post-deploy check is pending, empty, `?`, unknown,
+unavailable or has no read time. It exits 2 on bad usage. Wiring it into the seat's refusal of "complete" is
+fleet task 1303 (`live-checks-pack`); that task should call this script.
