@@ -63,3 +63,7 @@ Undos: <per step 6>
 - Status line: "ready for merge, not complete" until every post-deploy check is read and matches; only then "complete".
 - "Pending" is allowed in the PR; it is not allowed in the word "complete". Read it after the deploy, quote it, then say complete.
 - If a live item has no read-only read, say so and ask for one; do not skip it.
+
+Check a report before saying "complete": `python3 script/check_completion_record.py <file with the PR body or report>`.
+It exits 1 when a record line is missing, or when "complete" is said while a read failed, did not match, or the
+post-deploy check is pending.
