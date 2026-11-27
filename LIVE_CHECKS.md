@@ -39,6 +39,12 @@ when the live-read quotes are missing); this file merges after it. This file is 
 9. A read that returns nothing, "?", `unknown` or `unavailable` is a failed read, not a pass. Miss 161
    (task 37): a change was called complete while its live check read "?". Name the read before the
    review (step 2), and do not call the change complete until it returns the expected value.
+10. Miss 163 (task 30, `home` PR 95): a change was called complete after the merge and its live acceptance
+   then failed, because the reads had not been run against the deployed state. The seat's report before the
+   merge says "ready for merge, not complete". Only a later run that has read every post-deploy check, with
+   each read matching its expected value, says "complete". A live item whose expected value is not written
+   down before the review is itself a failure: write it (entity, value) in the PR, and if the criteria give
+   no read-only read for it, ask for one (step 2) instead of merging.
 
 ## Completion record (required before "complete")
 
