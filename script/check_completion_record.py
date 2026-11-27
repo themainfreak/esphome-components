@@ -26,6 +26,7 @@ REQUIRED = (
     "Undos:",
     "Status:",
 )
+TIME_RE = re.compile(r"^(\d{4}-\d{2}-\d{2}[T ])?\d{1,2}:\d{2}(:\d{2})?(\.\d+)?(Z|[+-]\d{2}:?\d{2})?\s*")
 FAILED_READS = ("?", "unknown", "unavailable", "none", "null", "")
 
 
@@ -56,7 +57,9 @@ def check(text: str) -> list[str]:
         if not any(line.lower().startswith(key.lower()) for line in lines)
     ]
     statuses = [line for line in lines if line.lower().startswith("status:")]
-    if statuses and re.search(r"\bnot\s+complete", statuses[-1], re.I):
+    if statuses and re.fullmatch(
+        r"status:\s*ready for merge, not complete\.?", statuses[-1], re.I
+    ):
         return problems
     for line in lines:
         low = line.lower()
@@ -74,11 +77,15 @@ def check(text: str) -> list[str]:
             elif "->" not in line:
                 problems.append(f"post-deploy check has no read: {line}")
             else:
-                value = _value(line)
-                if _is_failed(value):
-                    problems.append(f"failed post-deploy read: {line}")
-                elif not re.search(r"\d{1,2}:\d{2}|\d{4}-\d{2}-\d{2}", value):
+                time_match = TIME_RE.match(_value(line))
+                if not time_match:
                     problems.append(f"post-deploy read has no read time: {line}")
+                    continue
+                output = _value(line)[time_match.end() :].strip().strip("\"'`").strip()
+                if not output:
+                    problems.append(f"post-deploy read has no output: {line}")
+                elif _is_failed(output):
+                    problems.append(f"failed post-deploy read: {line}")
     return problems
 
 

@@ -41,8 +41,28 @@ def test_non_matching_read_with_good_value_refused() -> None:
 
 
 @pytest.mark.parametrize("post", ["?", "unknown", "unavailable", ""])
-def test_failed_post_deploy_refused(post: str) -> None:
-    assert any("post-deploy" in p for p in check(rec(post=post)))
+def test_untimed_post_deploy_refused(post: str) -> None:
+    assert check(rec(post=post))
+
+
+@pytest.mark.parametrize(
+    "post", ["11:00 ?", "11:00 unknown", "11:00 unavailable", '2026-11-20 10:00 "unknown"', "11:00 'None'"]
+)
+def test_timed_failed_post_deploy_refused(post: str) -> None:
+    assert any("failed post-deploy read" in p for p in check(rec(post=post)))
+
+
+@pytest.mark.parametrize("post", ["11:00", "2026-11-20 10:00 ", '11:00 ""'])
+def test_post_deploy_time_without_output_refused(post: str) -> None:
+    assert any("no output" in p for p in check(rec(post=post)))
+
+
+def test_dated_post_deploy_ok() -> None:
+    assert check(rec(post='2026-11-20 10:00 "on"')) == []
+
+
+def test_status_with_not_complete_inside_claim_checked() -> None:
+    assert check(rec(read="?", status="complete (earlier: not complete)"))
 
 
 def test_post_deploy_without_read_time_refused() -> None:
