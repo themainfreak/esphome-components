@@ -768,3 +768,4 @@ audience, including non-native English speakers.
 
 Before a change is called complete, follow [LIVE_CHECKS.md](LIVE_CHECKS.md): read each live item read-only and quote it.
 Do not say "complete" without the completion record block from LIVE_CHECKS.md (each live item, its read-only read with read time and quoted output, the post-deploy check, the undos) in the PR body and the final report. A read that does not match means the change is not complete.
+Before the review, write each live item's expected value (entity and value) in the PR. Until a post-deploy read has run and matched, report "ready for merge, not complete"; a read that returns nothing, "?", `unknown` or `unavailable` is a failed read.
