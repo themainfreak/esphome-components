@@ -53,11 +53,13 @@ So the seat's final report and the PR body must carry this block; without it the
 
 ```
 Live items: <each live item from the acceptance criteria, or "none">
+Expected: <per live item, the entity and the value, written before the review>
 Read 1: <connector path> at <read time> -> <quoted output> (matches: yes/no)
 Post-deploy check: <entity and value that must be seen> -> <read time and quoted output, or "pending">
 Synced and healthy (GitOps) / previous build ready to reflash (firmware): <quote or name>
 Undos: <per step 6>
 ```
 
+- Status line: "ready for merge, not complete" until every post-deploy check is read and matches; only then "complete".
 - "Pending" is allowed in the PR; it is not allowed in the word "complete". Read it after the deploy, quote it, then say complete.
 - If a live item has no read-only read, say so and ask for one; do not skip it.
