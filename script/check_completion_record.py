@@ -63,7 +63,10 @@ def check(text: str) -> list[str]:
         return problems
     for line in lines:
         low = line.lower()
-        if re.match(r"read \d+:", low):
+        if low.startswith(("expected:", "synced and healthy", "previous build")):
+            if re.sub(r"^[^:]*:", "", line).strip().strip("\"'`").lower() in FAILED_READS + ("pending",):
+                problems.append(f"complete claimed with an empty or pending line: {line}")
+        elif re.match(r"read \d+:", low):
             value = _value(line)
             if _is_failed(value):
                 problems.append(f"failed read: {line}")

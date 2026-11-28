@@ -89,3 +89,11 @@ def test_other_claims_checked(status: str) -> None:
 def test_bulleted_lines_checked() -> None:
     text = "\n".join("- " + x for x in rec(read="?").splitlines())
     assert any("failed read" in p for p in check(text))
+
+
+@pytest.mark.parametrize("old", ["Expected: sensor.x = on", "Synced and healthy / previous build ready to reflash: build 1"])
+@pytest.mark.parametrize("empty", ["", " ?", " pending"])
+def test_empty_expected_or_synced_refused_when_complete(old: str, empty: str) -> None:
+    text = rec().replace(old, old.split(":")[0] + ":" + empty)
+    assert check(text)
+    assert not check(text.replace("Status: complete", "Status: ready for merge, not complete"))
